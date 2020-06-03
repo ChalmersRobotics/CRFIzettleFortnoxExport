@@ -6,6 +6,8 @@
     "Medlemskap (Prata med styrelse först)": 3060,
     "Aluminium": 3010,
     "Komponenter": 3011,
+    "Kopplingstråd/kabel": 3018,
+    "Silikonkabel": 3018,
     "Akrylplast": 3016,
     "Avgift": 6571,
     "Låda med lock": 3019,
@@ -18,5 +20,6 @@
     "Godispåse": 3050,
     "Verktygslåda": 3019,
     "Tejp": 3013,
-    "Polykarbonat": 3016
+    "Polykarbonat": 3016,
+    "Plywood": 3017
 }

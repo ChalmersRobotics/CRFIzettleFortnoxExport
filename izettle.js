@@ -46,7 +46,7 @@ program
   });
 
 program
-  .command('export <peroid>')
+  .command('export <period>')
   .action((period) => {
     output.format(period);
   });
