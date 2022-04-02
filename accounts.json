@@ -6,6 +6,7 @@
     "Medlemskap (Prata med styrelse först)": 3060,
     "Aluminium": 3010,
     "Komponenter": 3011,
+    "Other components": 3011,
     "Kopplingstråd/kabel": 3018,
     "Silikonkabel": 3018,
     "Akrylplast": 3016,
@@ -28,5 +29,12 @@
     "Godistabletter": 3050,
     "Sortimentslåda": 3019,
     "Virke": 3015,
-    "ESP32": 3011
+    "ESP32": 3011,
+    "ESP8266/NodeMCU": 3011,
+    "Prototype boards": 3011,
+    "3D Nut Insert": 3023,
+    "Chips": 3050,
+    "Breadboard": 3011,
+    "Arduino Nano Every": 3011,
+    "Frozen food": 3050
 }
