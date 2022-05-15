@@ -31,10 +31,13 @@
     "Virke": 3015,
     "ESP32": 3011,
     "ESP8266/NodeMCU": 3011,
+    "Other MCU": 3011,
     "Prototype boards": 3011,
     "3D Nut Insert": 3023,
     "Chips": 3050,
     "Breadboard": 3011,
     "Arduino Nano Every": 3011,
-    "Frozen food": 3050
+    "Arduino Nano Clone": 3011,
+    "Frozen food": 3050,
+    "": 3065
 }
