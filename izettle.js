@@ -15,6 +15,11 @@ this.statement = bookshelf.model('Statement', {
   tableName: 'statements'
 });
 
+this.statement = bookshelf.model('Receipt', {
+  tableName: 'receipts'
+});
+
+
 const InitDatabase = require('./app/InitDatabase')
 
 const initDatabase = new InitDatabase(knex)
@@ -28,12 +33,13 @@ const output = new Output(bookshelf);
 const program = require('commander')
 
 program
-  .command('import <transactions> <statement>')
-  .action((transactions, statement) => {
+  .command('import <transactions> <statement> <receipt>')
+  .action((transactions, statement, receipt) => {
     let promises = [];
 
-    promises.push(imports.importTransactions(transactions));
-    promises.push(imports.importStatement(statement));
+    //promises.push(imports.importTransactions(transactions));
+    //promises.push(imports.importStatement(statement));
+    promises.push(imports.importReceipts(receipt));
 
     Promise.all(promises).then(
       () => {

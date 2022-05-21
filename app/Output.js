@@ -9,6 +9,8 @@ class Output {
     format(period) {
         let transactionDao = this.bookshelf.model("Transaction");
         let statementDao = this.bookshelf.model("Statement");
+        let receiptDao = this.bookshelf.model("Receipt");
+
         let statementTable = {};
 
         statementDao
@@ -17,6 +19,7 @@ class Output {
             .then((statements) => {
 
                 let promises = [];
+                let prom = [];
 
                 statements.forEach((statement) => {
 
@@ -29,6 +32,7 @@ class Output {
                             .fetchAll()
                             .then((transactions) => {
                                 let table = {};
+                                statementTable[statement.attributes.date] = table;
 
                                 transactions.forEach((transaction) => {
                                     let account = "Unknown"
@@ -44,11 +48,36 @@ class Output {
                                             price: transaction.attributes.price
                                         }
                                     }
-                                })
 
-                                statementTable[statement.attributes.date] = table;
 
-                                resolve();
+                                    prom.push(new Promise((res, rej) => {
+                                        receiptDao
+                                        .query((qb) => {
+                                            qb.where("receiptId", "=", transaction.attributes.receiptId)
+                                        })
+                                        .fetch()
+                                        .then((receipt) => {
+                                            if (table.hasOwnProperty("Presentkort Inlösen (2421)")) {
+                                                table["Presentkort Inlösen (2421)"].price += transaction.attributes.price
+                                            } else {
+                                                table["Presentkort Inlösen (2421)"] = {
+                                                    price: transaction.attributes.price
+                                                }
+                                            }
+                                            res();
+    
+                                        })
+                                        .catch((err) => {
+                                            res();
+                                        });       
+                                    }));
+
+                                });
+
+                                Promise.all(prom).then(a => {
+                                    resolve();
+                                });
+
                             });
                     }));
                 });

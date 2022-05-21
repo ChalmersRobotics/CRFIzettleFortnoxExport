@@ -161,6 +161,54 @@ class Imports {
 
     return Promise.all(promises);
   }
+
+  importReceipts(receiptsFile) {
+    let receiptNoColumn = "C";
+    let paymentTypeColumn = "H";
+    let startRow = 18;
+    let receiptDao = this.bookshelf.model("Receipt");
+    let promises = [];
+
+    let receiptBook = XLSX.readFile(receiptsFile);
+    let receipts = receiptBook.Sheets[receiptBook.SheetNames[0]];
+
+    for (let row = startRow; receipts[receiptNoColumn + row]; row++) {
+      promises.push(new Promise((resolve, reject) => {
+
+        if ( receipts[paymentTypeColumn + row].v != "Presentkort") {
+          resolve();
+          return;
+        }
+
+        let giftcardReceipt = {
+          receiptId: receipts[receiptNoColumn + row].v
+        }
+
+        receiptDao.forge(giftcardReceipt)
+        .fetch()
+        .then((res) => {
+          console.log(
+              "Receipt " + res.attributes.receiptId + " already imported")
+          resolve();
+        }).catch((err) => {
+          receiptDao.forge(giftcardReceipt)
+          .save()
+          .then((res) => {
+            console.log("Giftcard receipt " + res.attributes.receiptId + " saved");
+            resolve();
+          })
+          .catch((err) => {
+            console.log("Giftcard receipt couldn't be saved");
+            reject(err);
+          });
+        });
+    
+      }));
+    }
+
+    return Promise.all(promises);
+
+  }
 }
 
 module.exports = Imports;

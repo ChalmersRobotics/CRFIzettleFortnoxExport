@@ -43,6 +43,21 @@ class InitDatabase {
             });
         }));
 
+        promises.push(new Promise((resolve, reject) => {
+            that.knex.schema.hasTable('receipts').then((exists) => {
+                if (!exists) {
+                    return that.knex.schema.createTable('receipts', (table) => {
+                        table.increments('id').primary();
+                        table.integer('receiptId');
+                    }).then(() => {
+                        resolve()
+                    });
+                } else {
+                    resolve()
+                }
+            });
+        }));
+
         return Promise.all(promises)
     }
 }
