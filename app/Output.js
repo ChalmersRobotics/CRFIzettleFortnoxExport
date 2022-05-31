@@ -34,6 +34,9 @@ class Output {
                                 let table = {};
                                 statementTable[statement.attributes.date] = table;
 
+                                let receiptIdSet = new Set();
+
+
                                 transactions.forEach((transaction) => {
                                     let account = "Unknown"
 
@@ -49,19 +52,25 @@ class Output {
                                         }
                                     }
 
+                                    receiptIdSet.add(transaction.attributes.receiptId);
 
+                                    
+
+                                });
+
+                                receiptIdSet.forEach(receiptId => {
                                     prom.push(new Promise((res, rej) => {
                                         receiptDao
                                         .query((qb) => {
-                                            qb.where("receiptId", "=", transaction.attributes.receiptId)
+                                            qb.where("receiptId", "=", receiptId)
                                         })
                                         .fetch()
                                         .then((receipt) => {
                                             if (table.hasOwnProperty("Presentkort Inlösen (2421)")) {
-                                                table["Presentkort Inlösen (2421)"].price += transaction.attributes.price
+                                                table["Presentkort Inlösen (2421)"].price += receipt.attributes.price
                                             } else {
                                                 table["Presentkort Inlösen (2421)"] = {
-                                                    price: transaction.attributes.price
+                                                    price: receipt.attributes.price
                                                 }
                                             }
                                             res();
@@ -71,8 +80,7 @@ class Output {
                                             res();
                                         });       
                                     }));
-
-                                });
+                                })
 
                                 Promise.all(prom).then(a => {
                                     resolve();

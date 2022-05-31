@@ -49,6 +49,7 @@ class InitDatabase {
                     return that.knex.schema.createTable('receipts', (table) => {
                         table.increments('id').primary();
                         table.integer('receiptId');
+                        table.integer('price');
                     }).then(() => {
                         resolve()
                     });

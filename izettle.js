@@ -34,22 +34,19 @@ const program = require('commander')
 
 program
   .command('import <transactions> <statement> <receipt>')
-  .action((transactions, statement, receipt) => {
-    let promises = [];
+  .action(async (transactions, statement, receipt) => {
 
-    //promises.push(imports.importTransactions(transactions));
-    //promises.push(imports.importStatement(statement));
-    promises.push(imports.importReceipts(receipt));
+  await imports.importTransactions(transactions);
+  await imports.importStatement(statement);
+  await imports.importReceipts(receipt);
 
-    Promise.all(promises).then(
-      () => {
-        console.log("Destroying");
-        knex.destroy((res) => {
-          console.log(res);
-        });
-      }
-    )
+  console.log("Destroying");
+  knex.destroy((res) => {
+    console.log(res);
   });
+    
+
+});
 
 program
   .command('export <period>')

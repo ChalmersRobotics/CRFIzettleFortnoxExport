@@ -1,4 +1,6 @@
 const XLSX = require("xlsx");
+const prompt = require('prompt');
+
 
 class Imports {
   constructor(bookshelf) {
@@ -75,6 +77,7 @@ class Imports {
             });
           }
           currentPaymentRow = row;
+          resolve();
         } else if (statement[typeColumn + row].v === feeType) {
           let transaction = {
             receiptId: statement[receiptColumn + row].v,
@@ -102,6 +105,8 @@ class Imports {
               reject(err);
             });
           });
+        } else {
+          resolve();
         }
       }));
     }
@@ -162,9 +167,11 @@ class Imports {
     return Promise.all(promises);
   }
 
-  importReceipts(receiptsFile) {
+  async importReceipts(receiptsFile) {
     let receiptNoColumn = "C";
     let paymentTypeColumn = "H";
+    let lastFourColumn = "J";
+    let totalColumn = "E";
     let startRow = 18;
     let receiptDao = this.bookshelf.model("Receipt");
     let promises = [];
@@ -173,15 +180,32 @@ class Imports {
     let receipts = receiptBook.Sheets[receiptBook.SheetNames[0]];
 
     for (let row = startRow; receipts[receiptNoColumn + row]; row++) {
-      promises.push(new Promise((resolve, reject) => {
+      promises.push(new Promise(async (resolve, reject) =>  {
 
-        if ( receipts[paymentTypeColumn + row].v != "Presentkort") {
+        if ( receipts[lastFourColumn + row].v != "") {
           resolve();
           return;
         }
 
+        let price = 0;
+
+        if ( receipts[paymentTypeColumn + row].v != "Presentkort" && receipts[lastFourColumn + row].v == "") {
+          price = (await prompt.get(
+            {
+              name: "price",
+              description: "Enter gift card amount used for receipt " + receipts[receiptNoColumn + row].v
+            }
+            
+            )).price;
+        } else {
+          price = (receipts[totalColumn + row].v + "").replace(" kr", "");
+        }
+
+        price *= 100;
+
         let giftcardReceipt = {
-          receiptId: receipts[receiptNoColumn + row].v
+          receiptId: receipts[receiptNoColumn + row].v,
+          price: price
         }
 
         receiptDao.forge(giftcardReceipt)
@@ -207,7 +231,6 @@ class Imports {
     }
 
     return Promise.all(promises);
-
   }
 }
 
