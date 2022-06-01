@@ -28,6 +28,7 @@ class Imports {
 
     let receiptNumbers = [];
 
+
     for (let row = startRow; statement[dateColumn + row]; row++) {
       promises.push(new Promise((resolve, reject) => {
 
@@ -76,7 +77,12 @@ class Imports {
               });
             });
           }
+          
           currentPaymentRow = row;
+
+          // reset now that we found first payment, so we discard the receipts that have not yet been paid
+          receiptNumbers = [];
+
           resolve();
         } else if (statement[typeColumn + row].v === feeType) {
           let transaction = {
