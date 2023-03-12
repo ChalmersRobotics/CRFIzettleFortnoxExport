@@ -43,5 +43,7 @@
     "Presentkort": 2421,
     "Buck and boost conv": 3011,
     "433Mhz transmitter/receiver": 3011,
-    "Addressable RGB LED": 3011
+    "Addressable RGB LED": 3011,
+    "Servos": 3011,
+    "ESP-01 Wifi relay": 3011
 }
